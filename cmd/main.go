@@ -1,11 +1,9 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -16,16 +14,22 @@ func main() {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
-	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("./web"))))
+	router.Handle("/assets/*", http.FileServer(http.Dir("./ui/dist")))
 
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Content-Type", "text/html")
+	router.Get("/*", func(w http.ResponseWriter, r *http.Request) {
+		contentType := "text/html"
+		file := "index.html"
+
+		if r.URL.Path == "/favicon.ico" {
+			contentType = "image/x-icon"
+			file = "favicon.ico"
+		}
+
+		w.Header().Add("Content-Type", contentType)
 		w.WriteHeader(http.StatusOK)
 
-		index := filepath.Join("./web/html", "index.html")
-		parsedTemplate, _ := template.ParseFiles(index)
-
-		parsedTemplate.Execute(w, nil)
+		rawFile, _ := os.ReadFile("./ui/dist/" + file)
+		w.Write(rawFile)
 	})
 
 	serverPort := os.Getenv("PORT")
@@ -34,9 +38,11 @@ func main() {
 		serverPort = "3000"
 	}
 
+	log.Println("Starting server at port", serverPort)
+
 	err := http.ListenAndServe(":"+serverPort, router)
 
-	log.Println("Aplicação encerrada às", time.Now().Format(time.RFC3339))
+	log.Println("Stopping server at", time.Now().Format(time.RFC3339))
 
 	log.Fatal(err)
 }
