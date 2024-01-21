@@ -1,0 +1,64 @@
+/* ****************************** 
+MEDIA QUERIES MIXIN - MIN
+****************************** */
+
+@mixin twoxl {
+  @media screen and (min-width: 1401px) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin large {
+  @media screen and (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin medium {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin small {
+  @media screen and (min-width: 576px) {
+    @content;
+  }
+}
+
+/* ****************************** 
+ANIMAÇÕES
+****************************** */
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(-45deg);
+  }
+
+  to {
+    transform: rotate(315deg);
+  }
+}
